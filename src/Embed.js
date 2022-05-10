@@ -65,6 +65,8 @@ class Embed extends Component {
   }
 
   handleBackButton = e => {
+    console.log('inside handleBackButton', e);
+    console.log(this.WEBVIEW_REF.current);
     var urls = {
       simmer: 'https://simmerwp.com/blog/',
       moeving: 'https://themindmusingss.wordpress.com/',
@@ -72,8 +74,14 @@ class Embed extends Component {
       matt: 'https://ma.tt/',
     };
     this.WEBVIEW_REF.current.goBack();
-    if (Object.values(urls).includes(this.state.url)) return null;
-    else {
+    if (Object.values(urls).includes(this.state.url)) {
+      console.log('inside if backutton');
+      if (this.props.status) {
+        this.props.handlerCb(false);
+        return true;
+      }
+      return null;
+    } else {
       console.log('here');
       return true;
     }
@@ -89,6 +97,7 @@ class Embed extends Component {
   }
 
   render() {
+    console.log('inside render of embed component');
     var urls = {
       simmer: 'https://simmerwp.com/blog/',
       moeving: 'https://themindmusingss.wordpress.com/',
@@ -96,26 +105,36 @@ class Embed extends Component {
       matt: 'https://ma.tt/',
     };
 
-    const {source} = this.props.route.params;
+    console.log('htis is it', this.props);
+    const {source} = this.props.route
+      ? this.props.route.params
+      : {source: 'moeving'};
     const url = urls[source] || urls.simmer;
+    console.log(source, 'here me', url);
 
+    const uri =
+      'file:///C:/Users/ashwi/moeving/wordpress/charging/android/app/src/main/assets/moeving.html';
     return (
       <View style={{flex: 1}}>
-        {/* {this.state.close ? ( */}
         <WebView
           automaticallyAdjustContentInsets={false}
-          source={{uri: url}}
+          source={{
+            // uri: 'file:///C:/Users/ashwi/moeving/wordpress/charging/android/app/src/main/assets/moeving.html',
+            // uri: '../android/app/src/main/assets/moeving.html',
+            uri: url,
+          }}
+          allowFileAccess={true}
+          allowUniversalAccessFromFileURLs={true}
+          useWebKit={true}
           javaScriptEnabled={true}
           domStorageEnabled={true}
           decelerationRate="normal"
           startInLoadingState={true}
           scalesPageToFit={true}
           ref={this.WEBVIEW_REF}
+          androidLayerType={'software'}
           onNavigationStateChange={this.onNavigationStateChange.bind(this)}
         />
-        {/* ) : (
-          ''
-        )} */}
       </View>
     );
   }

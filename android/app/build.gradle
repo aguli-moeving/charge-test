@@ -290,7 +290,6 @@ dependencies {
         implementation jscFlavor
     }
 
-    implementation project(':react-native-video')
     implementation "androidx.appcompat:appcompat:1.0.0"
 }
 
